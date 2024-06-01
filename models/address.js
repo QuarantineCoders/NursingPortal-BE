@@ -1,54 +1,58 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Address extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Address, {
+      Address.belongsTo(models.User, {
         foreignKey: "userId",
-        as: "addresses",
+        as: "user",
       });
-
-      User.hasMany(models.Appointment, {
-        foreignKey: "userId",
-        as: "appointments",
+      Address.belongsTo(models.Appointment, {
+        foreignKey: "appointmentId",
+        as: "appointment",
       });
     }
   }
-  User.init(
+  Address.init(
     {
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      phone: {
-        type: DataTypes.STRING,
-      },
-      password: {
+      street: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      profileImage: {
+      city: {
         type: DataTypes.STRING,
+        allowNull: false,
       },
-      gender: {
+      province: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      district: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      latitude: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      longitude: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      label: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: "Address",
     }
   );
-  return User;
+  return Address;
 };
