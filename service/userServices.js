@@ -2,18 +2,26 @@ const { User } = require("../models");
 const CustomError = require("../utils/customError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const generateToken = require("../utils/generateToken");
 
 const createUserService = async (userData) => {
-  const { username, email, phone, profileImage, gender, password } = userData;
+  const {
+    username,
+    email,
+    phone,
+    profileImage,
+    gender,
+    password,
+    confirmPassword,
+  } = userData;
+
+  if (password !== confirmPassword) {
+    throw new CustomError("Passwords do not match", 400);
+  }
 
   const existingUserByEmail = await User.findOne({ where: { email } });
   if (existingUserByEmail) {
     throw new CustomError("Email already in use", 409);
-  }
-
-  const existingUserByUsername = await User.findOne({ where: { username } });
-  if (existingUserByUsername) {
-    throw new CustomError("Username already in use", 409);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,10 +34,12 @@ const createUserService = async (userData) => {
     password: hashedPassword,
   });
 
-  return newUser;
+  const token = generateToken(newUser);
+
+  return { user: newUser, token };
 };
 
-const loginUserService = async (res, userData) => {
+const loginUserService = async (userData) => {
   const { email, password } = userData;
 
   const user = await User.findOne({ where: { email } });
@@ -42,9 +52,7 @@ const loginUserService = async (res, userData) => {
     throw new CustomError("Invalid password", 400);
   }
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+  const token = generateToken(user);
 
   const { password: userPassword, ...userWithoutPassword } = user.dataValues;
 

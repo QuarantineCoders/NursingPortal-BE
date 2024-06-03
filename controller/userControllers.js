@@ -21,10 +21,7 @@ const createUserController = async (req, res, next) => {
 
 const loginUserController = async (req, res, next) => {
   try {
-    const { userWithoutPassword, token } = await loginUserService(
-      res,
-      req.body
-    );
+    const { userWithoutPassword, token } = await loginUserService(req.body);
     successResponse(
       res,
       { user: userWithoutPassword, token },
