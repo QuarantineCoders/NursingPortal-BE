@@ -23,7 +23,6 @@ const updateService = async (id, serviceData) => {
     throw new CustomError('Service not found', 404)
   }
   const updatedService = await service.update({ name, description, price })
-  console.log(updatedService)
   return updatedService
 }
 
