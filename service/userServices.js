@@ -35,8 +35,9 @@ const createUserService = async (userData) => {
   });
 
   const token = generateToken(newUser);
+  const { password: userPassword, ...userWithoutPassword } = newUser.dataValues;
 
-  return { user: newUser, token };
+  return { user: userWithoutPassword, token };
 };
 
 const loginUserService = async (userData) => {
@@ -59,7 +60,51 @@ const loginUserService = async (userData) => {
   return { userWithoutPassword, token };
 };
 
+const getAllUserService = async () => {
+  const users = await User.findAll({
+    attributes: { exclude: ["password"] },
+  });
+  if (!users) {
+    throw new CustomError("No users found", 404);
+  }
+  return users;
+};
+
+const getUserByIdService = async (id) => {
+  const user = await User.findByPk(id, {
+    attributes: { exclude: ["password"] },
+  });
+  if (!user) {
+    throw new CustomError("User not found", 404);
+  }
+  return user;
+};
+
+const updateUserByIdService = async (id, userData) => {
+  const user = await User.findByPk(id, {
+    attributes: { exclude: ["password"] },
+  });
+  if (!user) {
+    throw new CustomError("User not found", 404);
+  }
+  const updatedUser = await user.update(userData);
+  return updatedUser;
+};
+
+const deleteUserByIdService = async (id) => {
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new CustomError("User not found", 404);
+  }
+  await user.destroy();
+  return user;
+};
+
 module.exports = {
   createUserService,
   loginUserService,
+  getAllUserService,
+  getUserByIdService,
+  updateUserByIdService,
+  deleteUserByIdService,
 };
