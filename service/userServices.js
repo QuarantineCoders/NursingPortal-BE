@@ -63,6 +63,7 @@ const loginUserService = async (userData) => {
 const getAllUserService = async () => {
   const users = await User.findAll({
     attributes: { exclude: ["password"] },
+    include: { association: "addresses" },
   });
   if (!users) {
     throw new CustomError("No users found", 404);
@@ -73,6 +74,7 @@ const getAllUserService = async () => {
 const getUserByIdService = async (id) => {
   const user = await User.findByPk(id, {
     attributes: { exclude: ["password"] },
+    include: { association: "addresses" },
   });
   if (!user) {
     throw new CustomError("User not found", 404);
