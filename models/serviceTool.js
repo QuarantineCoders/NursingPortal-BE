@@ -1,42 +1,38 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class AppointmentService extends Model {
+  class ServiceTool extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      AppointmentService.belongsTo(models.Appointment, {
-        foreignKey: "appointmentId",
-        as: "appointment",
-      });
-      AppointmentService.belongsTo(models.Service, {
+      ServiceTool.belongsTo(models.Service, {
         foreignKey: "serviceId",
         as: "service",
       });
+      ServiceTool.belongsTo(models.Tool, {
+        foreignKey: "toolId",
+        as: "tool",
+      });
     }
   }
-  AppointmentService.init(
+  ServiceTool.init(
     {
-      appointmentId: {
+      serviceId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      subserviceId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      subserviceId: {
+      toolId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "AppointmentService",
+      modelName: "ServiceTool",
     }
   );
-  return AppointmentService;
+  return ServiceTool;
 };

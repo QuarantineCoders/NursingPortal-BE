@@ -1,25 +1,21 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Subservice extends Model {
+  class Tool extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Subservice.belongsTo(models.Service, {
-        foreignKey: "serviceId",
-        as: "service",
-      });
-      Subservice.belongsToMany(models.Appointment, {
-        through: "AppointmentService",
-        foreignKey: "subserviceId",
-        as: "appointments",
+      Tool.belongsToMany(models.Service, {
+        through: "ServiceTool",
+        foreignKey: "toolId",
+        as: "services",
       });
     }
   }
-  Subservice.init(
+  Tool.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -31,13 +27,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       quantity: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "Subservice",
+      modelName: "Tool",
     }
   );
-  return Subservice;
+  return Tool;
 };
