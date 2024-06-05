@@ -26,7 +26,41 @@ const updateService = async (id, serviceData) => {
   return updatedService
 }
 
+// get service by id
+const getServiceByIdService = async id => {
+  const service = await Service.findByPk(id)
+  if (!service) {
+    throw new CustomError('Service not found', 404)
+  }
+
+  return service
+}
+
+// get all service
+const getAllService = async () => {
+  const services = await Service.findAll()
+  if (!services) {
+    throw new CustomError('No services found', 404)
+  }
+
+  return services
+}
+
+// Delete service
+const deleteServiceByIdService = async id => {
+  const service = await Service.findByPk(id)
+  if (!service) {
+    throw new CustomError('Service not found', 404)
+  }
+  console.log(service)
+  await service.destroy()
+  return service
+}
+
 module.exports = {
   createServiceService,
   updateService,
+  getServiceByIdService,
+  getAllService,
+  deleteServiceByIdService,
 }
