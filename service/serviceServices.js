@@ -6,7 +6,7 @@ const createServiceService = async serviceData => {
   const { name, description, price } = serviceData
 
   if (!name || !description || !price) {
-    throw new CustomError('Required all fields', 403)
+    throw new CustomError('Required all fields', 422)
   }
 
   const newService = await Service.create({ name, description, price })
