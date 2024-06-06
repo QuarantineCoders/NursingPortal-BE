@@ -9,4 +9,6 @@ router.post(
   addressController.createAddressController
 );
 
+router.put("/:id", verifyUserToken, addressController.updateAddressController);
+
 module.exports = router;

@@ -61,7 +61,57 @@ const updateToolService = async (id, toolData) => {
   return tool;
 };
 
+const getAllTool = async () => {
+  const tools = await Tool.findAll({
+    include: { association: "services" },
+  });
+
+  if (!tools) {
+    throw new CustomError("No tools found", 404);
+  }
+
+  return tools;
+};
+
+const getToolByIdService = async (id) => {
+  const tool = await Tool.findByPk(id, {
+    include: { association: "services" },
+  });
+
+  if (!tool) {
+    throw new CustomError("Tool not found", 404);
+  }
+
+  return tool;
+};
+
+const deleteToolByIdService = async (toolId) => {
+  const transaction = await Tool.sequelize.transaction();
+
+  try {
+    const tool = await Tool.findByPk(toolId, { transaction });
+
+    if (!tool) {
+      throw new CustomError("Tool not found", 404);
+    }
+
+    const services = await tool.getServices({ transaction });
+
+    await tool.removeServices(services, { transaction });
+
+    await tool.destroy({ transaction });
+
+    await transaction.commit();
+  } catch (error) {
+    await transaction.rollback();
+    throw new CustomError("Failed to delete tool", 500);
+  }
+};
+
 module.exports = {
   createToolService,
   updateToolService,
+  getAllTool,
+  getToolByIdService,
+  deleteToolByIdService,
 };

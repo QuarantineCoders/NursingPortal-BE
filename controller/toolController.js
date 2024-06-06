@@ -1,6 +1,10 @@
+const { get } = require("../router/serviceRoutes");
 const {
   createToolService,
   updateToolService,
+  getAllTool,
+  getToolByIdService,
+  deleteToolByIdService,
 } = require("../service/toolServices");
 const CustomError = require("../utils/customError");
 const { successResponse, errorResponse } = require("../utils/response");
@@ -31,7 +35,49 @@ const updateToolController = async (req, res, next) => {
   }
 };
 
+const getAllToolController = async (req, res, next) => {
+  try {
+    const tools = await getAllTool();
+    successResponse(res, tools, "Tool fetched successfully", 200);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      errorResponse(res, error.message, error.message, error.statusCode);
+    } else {
+      errorResponse(res, error.message, "Failed to fetch tool");
+    }
+  }
+};
+
+const getToolByIdController = async (req, res, next) => {
+  try {
+    const tool = await getToolByIdService(req.params.id);
+    successResponse(res, tool, "Tool fetched successfully", 200);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      errorResponse(res, error.message, error.message, error.statusCode);
+    } else {
+      errorResponse(res, error.message, "Failed to fetch tool");
+    }
+  }
+};
+
+const deleteToolByIdController = async (req, res, next) => {
+  try {
+    const tool = await deleteToolByIdService(req.params.id);
+    successResponse(res, tool, "Tool deleted successfully", 200);
+  } catch (error) {
+    if (error instanceof CustomError) {
+      errorResponse(res, error.message, error.message, error.statusCode);
+    } else {
+      errorResponse(res, error.message, "Failed to delete tool");
+    }
+  }
+};
+
 module.exports = {
   createToolController,
   updateToolController,
+  getAllToolController,
+  getToolByIdController,
+  deleteToolByIdController,
 };
