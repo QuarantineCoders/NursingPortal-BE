@@ -8,9 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Service.hasMany(models.Subservice, {
+      Service.belongsToMany(models.Tool, {
+        through: "ServiceTool",
         foreignKey: "serviceId",
-        as: "subservices",
+        as: "tools",
       });
       Service.belongsToMany(models.Appointment, {
         through: "AppointmentService",
