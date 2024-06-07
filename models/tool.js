@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "toolId",
         as: "services",
       });
+      Tool.belongsToMany(models.AppointmentService, {
+        through: "AppointmentServiceTool",
+        foreignKey: "toolId",
+        as: "appointmentServices",
+      });
     }
   }
   Tool.init(
