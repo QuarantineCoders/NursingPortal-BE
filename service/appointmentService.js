@@ -99,6 +99,15 @@ const createAppointmentService = async (appointmentData) => {
           await transaction.rollback();
           throw new CustomError("Invalid tool ID", 400);
         }
+        // check if the tool belongs to the service
+        const toolService = await foundTool.getServices({ transaction });
+        if (!toolService.find((service) => service.id === foundService.id)) {
+          await transaction.rollback();
+          throw new CustomError(
+            `Tool ID: ${toolId} does not belong to service ID: ${serviceId}`,
+            400
+          );
+        }
 
         await AppointmentServiceTool.create(
           {
@@ -215,6 +224,18 @@ const updateAppointmentService = async (appointmentId, appointmentData) => {
             if (!foundTool) {
               await transaction.rollback();
               throw new CustomError(`Invalid tool ID: ${toolId}`, 400);
+            }
+
+            // check if the tool belongs to the service
+            const toolService = await foundTool.getServices({ transaction });
+            if (
+              !toolService.find((service) => service.id === foundService.id)
+            ) {
+              await transaction.rollback();
+              throw new CustomError(
+                `Tool ID: ${toolId} does not belong to service ID: ${serviceId}`,
+                400
+              );
             }
 
             let appointmentServiceTool = await AppointmentServiceTool.findOne({
