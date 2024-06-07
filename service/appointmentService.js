@@ -12,7 +12,7 @@ const {
 const { getAppointments } = require("../utils/appointmentHelper");
 const CustomError = require("../utils/customError");
 
-const createAppointmentService = async (appointmentData) => {
+const createAppointmentService = async (userId, appointmentData) => {
   const {
     appointmentTime,
     appointmentDate,
@@ -24,7 +24,6 @@ const createAppointmentService = async (appointmentData) => {
     description,
     addressId,
     services,
-    userId,
   } = appointmentData;
 
   if (userId) {
