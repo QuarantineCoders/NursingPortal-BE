@@ -11,7 +11,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 
 const createAppointmentController = async (req, res, next) => {
   try {
-    const appointment = await createAppointmentService(req.user.id, req.body);
+    const appointment = await createAppointmentService(req.body);
     successResponse(res, appointment, "Appointment created successfully", 201);
   } catch (error) {
     if (error instanceof CustomError) {
