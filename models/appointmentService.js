@@ -16,19 +16,25 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "serviceId",
         as: "service",
       });
+      AppointmentService.belongsToMany(models.Tool, {
+        through: "AppointmentServiceTool",
+        foreignKey: "appointmentServiceId",
+        as: "tools",
+      });
     }
   }
   AppointmentService.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       appointmentId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      subserviceId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      subserviceId: {
+      serviceId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "appointmentId",
         as: "payment",
       });
+      Appointment.belongsToMany(models.Service, {
+        through: "AppointmentService",
+        foreignKey: "appointmentId",
+        as: "services",
+      });
       Appointment.hasMany(models.AppointmentService, {
         foreignKey: "appointmentId",
         as: "appointmentServices",
@@ -30,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       appointmentDate: {
         type: DataTypes.DATE,
+        allowNull: false,
+      },
+      appointmentTime: {
+        type: DataTypes.TIME,
         allowNull: false,
       },
       patientName: {
