@@ -8,7 +8,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 const createAddressController = async (req, res, next) => {
   try {
     const newAddress = await createAddressService(req.user.id, req.body);
-    successResponse(res, newAddress, "Address created successfully", 201);
+    successResponse(res, newAddress, "Address successfully created", 201);
   } catch (error) {
     if (error instanceof CustomError) {
       errorResponse(res, error.message, error.message, error.statusCode);
