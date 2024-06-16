@@ -12,7 +12,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 
 const createUserController = async (req, res, next) => {
   try {
-    const newUser = await createUserService(req.user.id, req.body);
+    const newUser = await createUserService(req.body);
     successResponse(res, newUser, "User created successfully", 201);
   } catch (error) {
     if (error instanceof CustomError) {
