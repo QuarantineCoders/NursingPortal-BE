@@ -68,6 +68,11 @@ const createAppointmentService = async (userId, appointmentData) => {
       throw new CustomError("Failed to create appointment", 500);
     }
 
+    if (!services || services.length === 0) {
+      await transaction.rollback();
+      throw new CustomError("Appointment must have at least one service", 400);
+    }
+
     for (const service of services) {
       const { serviceId, tools } = service;
 

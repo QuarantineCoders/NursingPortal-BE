@@ -61,10 +61,10 @@ const createAppointmentValidationRules = [
     .notEmpty()
     .withMessage("Address ID cannot be empty"),
   body("services")
-    .isArray()
-    .withMessage("Services must be an array")
     .notEmpty()
-    .withMessage("Services array cannot be empty"),
+    .withMessage("Appointment must have at least one service")
+    .isArray()
+    .withMessage("Services must be an array"),
   body("services.*.serviceId")
     .exists()
     .withMessage("Service ID is required")
