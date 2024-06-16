@@ -1,18 +1,16 @@
 const { Address, User } = require("../models");
 const CustomError = require("../utils/customError");
 
-const createAddressService = async (addressData) => {
-  const { userId } = addressData;
+const createAddressService = async (userId, addressData) => {
   const user = await User.findByPk(userId);
   if (!user) {
     throw new CustomError("User not found", 404);
   }
-  const newAddress = await Address.create(addressData);
+  const newAddress = await Address.create({ ...addressData, userId });
   return newAddress;
 };
 
-const updateAddressService = async (id, addressData) => {
-  const { userId } = addressData;
+const updateAddressService = async (userId, id, addressData) => {
   const address = await Address.findByPk(id);
   if (!address) {
     throw new CustomError("Address not found", 404);

@@ -68,7 +68,11 @@ const getUserByIdController = async (req, res, next) => {
 
 const updateUserController = async (req, res, next) => {
   try {
-    const updatedUser = await updateUserByIdService(req.user.id, req.body);
+    const updatedUser = await updateUserByIdService(
+      req.user.id,
+      req.params.id,
+      req.body
+    );
     successResponse(res, updatedUser, "User updated successfully", 200);
   } catch (error) {
     if (error instanceof CustomError) {
