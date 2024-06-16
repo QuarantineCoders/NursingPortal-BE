@@ -7,8 +7,9 @@ const { successResponse, errorResponse } = require("../utils/response");
 
 const createAddressController = async (req, res, next) => {
   try {
-    const newAddress = await createAddressService(req.body);
-    successResponse(res, newAddress, "Address created successfully", 201);
+    const newAddress = await createAddressService(req.user.id, req.body);
+    successResponse(res, newAddress, "Address successfully created", 201);
+
   } catch (error) {
     if (error instanceof CustomError) {
       errorResponse(res, error.message, error.message, error.statusCode);
@@ -20,7 +21,7 @@ const createAddressController = async (req, res, next) => {
 
 const updateAddressController = async (req, res, next) => {
   try {
-    const updatedAddress = await updateAddressService(req.params.id, req.body);
+    const updatedAddress = await updateAddressService(req.user.id,req.params.id, req.body);
     successResponse(res, updatedAddress, "Address updated successfully", 200);
   } catch (error) {
     if (error instanceof CustomError) {
