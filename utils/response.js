@@ -14,4 +14,11 @@ const errorResponse = (res, error, message, statusCode = 500) => {
   });
 };
 
-module.exports = { successResponse, errorResponse };
+const validationError = (res, message, statusCode = 400) => {
+  res.status(statusCode).json({
+    success: false,
+    message,
+  });
+};
+
+module.exports = { successResponse, errorResponse, validationError };

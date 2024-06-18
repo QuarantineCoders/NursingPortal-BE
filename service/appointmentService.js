@@ -12,7 +12,7 @@ const {
 const { getAppointments } = require("../utils/appointmentHelper");
 const CustomError = require("../utils/customError");
 
-const createAppointmentService = async (appointmentData) => {
+const createAppointmentService = async (userId, appointmentData) => {
   const {
     appointmentTime,
     appointmentDate,
@@ -24,7 +24,6 @@ const createAppointmentService = async (appointmentData) => {
     description,
     addressId,
     services,
-    userId,
   } = appointmentData;
 
   if (userId) {
@@ -69,6 +68,11 @@ const createAppointmentService = async (appointmentData) => {
       throw new CustomError("Failed to create appointment", 500);
     }
 
+    if (!services || services.length === 0) {
+      await transaction.rollback();
+      throw new CustomError("Appointment must have at least one service", 400);
+    }
+
     for (const service of services) {
       const { serviceId, tools } = service;
 
@@ -91,33 +95,33 @@ const createAppointmentService = async (appointmentData) => {
         throw new CustomError("Failed to create appointment service", 500);
       }
 
-      for (const tool of tools) {
-        const { toolId, quantity } = tool;
+      // for (const tool of tools) {
+      //   const { toolId, quantity } = tool;
 
-        const foundTool = await Tool.findByPk(toolId, { transaction });
-        if (!foundTool) {
-          await transaction.rollback();
-          throw new CustomError("Invalid tool ID", 400);
-        }
-        // check if the tool belongs to the service
-        const toolService = await foundTool.getServices({ transaction });
-        if (!toolService.find((service) => service.id === foundService.id)) {
-          await transaction.rollback();
-          throw new CustomError(
-            `Tool ID: ${toolId} does not belong to service ID: ${serviceId}`,
-            400
-          );
-        }
+      //   const foundTool = await Tool.findByPk(toolId, { transaction });
+      //   if (!foundTool) {
+      //     await transaction.rollback();
+      //     throw new CustomError("Invalid tool ID", 400);
+      //   }
+      //   // check if the tool belongs to the service
+      //   const toolService = await foundTool.getServices({ transaction });
+      //   if (!toolService.find((service) => service.id === foundService.id)) {
+      //     await transaction.rollback();
+      //     throw new CustomError(
+      //       `Tool ID: ${toolId} does not belong to service ID: ${serviceId}`,
+      //       400
+      //     );
+      //   }
 
-        await AppointmentServiceTool.create(
-          {
-            appointmentServiceId: newAppointmentService.id,
-            toolId: foundTool.id,
-            quantity: quantity,
-          },
-          { transaction }
-        );
-      }
+      //   await AppointmentServiceTool.create(
+      //     {
+      //       appointmentServiceId: newAppointmentService.id,
+      //       toolId: foundTool.id,
+      //       quantity: quantity,
+      //     },
+      //     { transaction }
+      //   );
+      // }
     }
 
     await transaction.commit();

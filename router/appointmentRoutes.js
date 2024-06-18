@@ -1,12 +1,18 @@
 const express = require("express");
 const appointmentController = require("../controller/appointmentController");
 const verifyUserToken = require("../middleware/verifyUserToken");
+const { validate } = require("../validation");
+const {
+  createAppointmentValidationRules,
+  updateAppointmentValidationRules,
+} = require("../validation/appoinmentValidation");
 
 const router = express.Router();
 
 router.post(
   "/create",
   verifyUserToken,
+  validate(createAppointmentValidationRules),
   appointmentController.createAppointmentController
 );
 router.get(
@@ -27,6 +33,7 @@ router.get(
 router.put(
   "/:id",
   verifyUserToken,
+  validate(updateAppointmentValidationRules),
   appointmentController.updateAppointmentController
 );
 router.delete(
