@@ -14,10 +14,10 @@ const errorResponse = (res, error, message, statusCode = 500) => {
   });
 };
 
-const validationError = (res, message, statusCode = 400) => {
+const validationError = (res, error, statusCode = 400) => {
   res.status(statusCode).json({
     success: false,
-    message,
+    error,
   });
 };
 
