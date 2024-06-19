@@ -2,11 +2,11 @@ const { Tool, Service } = require("../models");
 const CustomError = require("../utils/customError");
 
 const createToolService = async (toolData) => {
-  const { serviceIds, name, price, quantity } = toolData;
+  const { serviceIds, name, price } = toolData;
 
   const transaction = await Tool.sequelize.transaction();
 
-  const newTool = await Tool.create({ name, price, quantity }, { transaction });
+  const newTool = await Tool.create({ name, price }, { transaction });
 
   if (!newTool) {
     throw new CustomError("Failed to create tool", 500);
@@ -31,7 +31,7 @@ const createToolService = async (toolData) => {
 };
 
 const updateToolService = async (id, toolData) => {
-  const { serviceIds, name, price, quantity } = toolData;
+  const { serviceIds, name, price } = toolData;
 
   const tool = await Tool.findByPk(id);
 
@@ -41,7 +41,7 @@ const updateToolService = async (id, toolData) => {
 
   const transaction = await Tool.sequelize.transaction();
 
-  await tool.update({ name, price, quantity }, { transaction });
+  await tool.update({ name, price }, { transaction });
 
   if (Array.isArray(serviceIds) && serviceIds.length > 0) {
     const services = await Service.findAll({

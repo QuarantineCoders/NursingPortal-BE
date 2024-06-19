@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post(
   "/create",
-  validate(createToolValidationRules),
+  // validate(createToolValidationRules),
   toolController.createToolController
 );
 router.put(

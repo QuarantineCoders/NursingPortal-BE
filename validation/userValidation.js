@@ -11,8 +11,8 @@ const createUserValidationRules = [
     .optional()
     .isMobilePhone()
     .withMessage("Invalid phone number")
-    .isLength({ min: 10, max: 10 })
-    .withMessage("Phone number must be 10 digits"),
+    .isLength({ min: 12, max: 12 })
+    .withMessage("Phone number must be 9 digits"),
   body("password")
     .exists()
     .withMessage("Password is required")
@@ -38,8 +38,8 @@ const updateUserValidationRules = [
     .optional()
     .isMobilePhone()
     .withMessage("Invalid phone number")
-    .isLength({ min: 10, max: 10 })
-    .withMessage("Phone number must be 10 digits"),
+    .isLength({ min: 12, max: 12 })
+    .withMessage("Phone number must be 9 digits"),
   body("username")
     .optional()
     .isString()

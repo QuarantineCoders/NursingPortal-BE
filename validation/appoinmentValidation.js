@@ -36,11 +36,13 @@ const createAppointmentValidationRules = [
     .withMessage("Patient gender cannot be empty"),
   body("patientPhoneNumber")
     .exists()
-    .withMessage("Patient phone number is required")
+    .withMessage("Phone number is required")
     .isMobilePhone()
     .withMessage("Invalid phone number")
     .notEmpty()
-    .withMessage("Patient phone number cannot be empty"),
+    .withMessage("Phone number cannot be empty")
+    .isLength({ min: 12, max: 12 })
+    .withMessage("Phone number must be 9 digits"),
   body("status")
     .exists()
     .withMessage("Status is required")
@@ -110,7 +112,9 @@ const updateAppointmentValidationRules = [
     .isMobilePhone()
     .withMessage("Invalid phone number")
     .notEmpty()
-    .withMessage("Patient phone number cannot be empty"),
+    .withMessage("Phone number cannot be empty")
+    .isLength({ min: 12, max: 12 })
+    .withMessage("Phone number must be 9 digits"),
   body("status")
     .optional()
     .isIn(["upcoming", "completed", "cancelled"])
