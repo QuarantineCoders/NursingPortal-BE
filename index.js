@@ -1,18 +1,21 @@
-const express = require('express')
-const routes = require('./router/index.js')
-const dbConnection = require('./config/database.js')
-const errorHandler = require('./middleware/errorHandler.js')
-const cors = require('cors')
-const app = express()
+const express = require("express");
+const routes = require("./router/index.js");
+const dbConnection = require("./config/database.js");
+const errorHandler = require("./middleware/errorHandler.js");
+const cors = require("cors");
+const app = express();
+require("dotenv").config();
 
-app.use(express.json())
-app.use(cors())
+const PORT = process.env.PORT || 3000;
 
-app.use('/api/', routes)
+app.use(express.json());
+app.use(cors());
 
-app.use(errorHandler)
+app.use("/api/", routes);
 
-app.listen(5000, () => {
-  console.log('Server is running on port 5000')
-  dbConnection()
-})
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+  dbConnection();
+});
