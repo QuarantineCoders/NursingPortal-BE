@@ -29,7 +29,12 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd ~/mnursing-application/server/dev
-          git pull origin dev
+          if [ ! -d .git ]; then
+            git clone https://github.com/QuarantineCoders/NursingPortal-BE.git .
+            git checkout dev
+          else
+            git pull origin dev
+          fi
           npm install --omit=dev
           if pm2 list | grep -q "mnursing-api-dev"; then
             pm2 reload "mnursing-api-dev"
