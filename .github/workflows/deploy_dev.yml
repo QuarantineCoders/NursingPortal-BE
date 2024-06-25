@@ -11,6 +11,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,9 +22,7 @@ jobs:
           node-version: '18.19.1'
 
       - name: Install dependencies
-        run: |
-          cd ~/mnursing-application/server/dev
-          npm install --omit=dev
+        run: npm install
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
@@ -32,12 +31,13 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd ~/mnursing-application/server/dev
+            cd /home/root/mnursing-application/server/dev  # Adjust path as needed
             git pull origin dev
             npm install --omit=dev
             if pm2 list | grep -q "mnursing-api-dev"; then
-              pm2 reload "mnursing-api-dev" --update-env
+              pm2 reload "mnursing-api-dev"
             else
               pm2 start index.js --name "mnursing-api-dev"
             fi
             pm2 save
+            pm2 status
