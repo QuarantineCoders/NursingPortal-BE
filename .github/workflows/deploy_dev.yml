@@ -30,6 +30,7 @@ jobs:
         script: |
           cd ~/mnursing-application/server/dev
           if [ ! -d .git ]; then
+            rm -rf ~/mnursing-application/server/dev/*
             git clone https://github.com/QuarantineCoders/NursingPortal-BE.git .
             git checkout dev
           else
