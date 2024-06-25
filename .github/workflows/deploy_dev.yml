@@ -35,5 +35,5 @@ jobs:
           git pull origin dev
           npm install --omit=dev
           pm2 start index.js --name "mnursing-api-dev"
-	        pm2 restart "mnursing-api-dev"
-	        pm2 status
+	  pm2 restart "mnursing-api-dev"
+	  pm2 status
