@@ -11,36 +11,33 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.19.1'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18.19.1'
 
-    - name: Deploy to Server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
+      - name: Install dependencies
+        run: |
           cd ~/mnursing-application/server/dev
-          if [ ! -d .git ]; then
-            rm -rf ~/mnursing-application/server/dev/*
-            git clone https://github.com/QuarantineCoders/NursingPortal-BE.git .
-            git checkout dev
-          else
-            git pull origin dev
-          fi
           npm install --omit=dev
-          if pm2 list | grep -q "mnursing-api-dev"; then
-            pm2 reload "mnursing-api-dev"
-          else
-            pm2 start index.js --name "mnursing-api-dev"
-          fi
-          pm2 save
-          pm2 status
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/mnursing-application/server/dev
+            git pull origin dev
+            npm install --omit=dev
+            if pm2 list | grep -q "mnursing-api-dev"; then
+              pm2 reload "mnursing-api-dev" --update-env
+            else
+              pm2 start index.js --name "mnursing-api-dev"
+            fi
+            pm2 save
