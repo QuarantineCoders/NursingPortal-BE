@@ -21,11 +21,6 @@ jobs:
       with:
         node-version: '18.19.1'
 
-    - name: Install dependencies
-      run: |
-        cd server/dev
-        npm install
-
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
       with:
