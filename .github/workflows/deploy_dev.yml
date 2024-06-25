@@ -33,10 +33,7 @@ jobs:
         script: |
           cd ~/mnursing-application/server/dev
           git pull origin dev
-          npm install --production
-          pm2 restart all
-
-
-
-
-
+          npm install --omit=dev
+          pm2 start index.js --name "mnursing-api-dev"
+	        pm2 restart "mnursing-api-dev"
+	        pm2 status
