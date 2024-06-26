@@ -26,4 +26,15 @@ jobs:
         cache: 'npm'
         
     
-    - run: npm i
+    - name: npm install
+      run: |
+        npm install
+        
+    - name: Stop existing PM2 process
+      run: pm2 stop index.js || true  # || true to ignore error if process is not running
+
+    - name: Start PM2 process
+      run: pm2 start index.js
+
+    - name: Restart Nginx
+      run: sudo systemctl restart nginx
