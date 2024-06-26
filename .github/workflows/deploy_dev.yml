@@ -37,4 +37,4 @@ jobs:
       run: pm2 start index.js
 
     - name: Restart Nginx
-      run: sudo systemctl restart nginx
+      run: sudo service nginx restart
