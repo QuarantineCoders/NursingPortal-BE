@@ -1,43 +1,29 @@
-name: Deploy Node.js Application to Development
+
+name: Node.js CI
 
 on:
   push:
-    branches:
-      - dev
+    branches: [ "dev" ]
   pull_request:
-    branches:
-      - dev
+    branches: [ "dev" ]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18.19.1'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Deploy to Server #
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /home/root/mnursing-application/server/dev  # Adjust path as needed
-            git pull origin dev
-            npm install --omit=dev
-            if pm2 list | grep -q "mnursing-api-dev"; then
-              pm2 reload "mnursing-api-dev"
-            else
-              pm2 start index.js --name "mnursing-api-dev"
-            fi
-            pm2 save
-            pm2 status
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
