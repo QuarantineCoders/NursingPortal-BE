@@ -1,4 +1,3 @@
-
 name: Node.js CI
 
 on:
@@ -15,7 +14,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -24,17 +22,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        
-    
-    - name: npm install
-      run: |
-        npm install
-        
-    - name: Stop existing PM2 process
-      run: pm2 stop index.js || true  # || true to ignore error if process is not running
 
-    - name: Start PM2 process
-      run: pm2 start index.js
+    - name: npm install
+      run: npm install
+
+    - name: Stop existing PM2 process
+      run: pm2 stop index.js || true
+
+    - name: Start PM2 process and Save
+      run: |
+        pm2 start index.js --name mnursing-dev
+        pm2 save
 
     - name: Restart Nginx
-      run: sudo service nginx restart
+      run: sudo systemctl restart nginx
