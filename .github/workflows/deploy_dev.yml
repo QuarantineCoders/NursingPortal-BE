@@ -14,6 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -22,12 +23,14 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
+        
+    
     - name: npm install
-      run: npm install
-
+      run: |
+        npm install
+        
     - name: Stop existing PM2 process
-      run: pm2 stop index.js || true
+      run: pm2 stop index.js || true  
 
     - name: Start PM2 process and Save
       run: |
@@ -35,4 +38,4 @@ jobs:
         pm2 save
 
     - name: Restart Nginx
-      run: sudo systemctl restart nginx
+      run: sudo service nginx restart
