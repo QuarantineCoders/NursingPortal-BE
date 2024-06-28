@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the Mnursing -BE Portal" });
+  res.json({ message: "Welcome to the Mnursing -API Portal" });
 });
 
 app.use("/api/", routes);
