@@ -2,40 +2,37 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
   pull_request:
-    branches: [ "dev" ]
+    branches: ["dev"]
 
 jobs:
   build:
-
     runs-on: self-hosted
 
     strategy:
       matrix:
         node-version: [22.x]
-       
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        
-    
-    - name: npm install
-      run: |
-        npm install
-        
-    - name: Stop existing PM2 process
-      run: pm2 stop index.js || true  
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-    - name: Start PM2 process and Save
-      run: |
-        pm2 start index.js --name mnursing-dev
-        pm2 save
+      - name: npm install
+        run: |
+          npm install
 
-    - name: Restart Nginx
-      run: sudo service nginx restart
+      - name: Stop existing PM2 process
+        run: pm2 stop 0
+
+      - name: Start PM2 process and Save
+        run: |
+          pm2 start 0 
+          pm2 save
+
+      - name: Restart Nginx
+        run: sudo service nginx restart
